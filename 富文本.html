@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	</head>
+	<body>
+		    <div id="editor">
+		        <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+		    </div>
+		
+		    <!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+		    <script type="text/javascript" src="/wangEditor.min.js"></script>
+		    <script type="text/javascript">
+		        var E = window.wangEditor
+		        var editor = new E('#editor')
+		        // 或者 var editor = new E( document.getElementById('editor') )
+				// editor.customConfig.uploadImgServer = 'http://localhost:3500/userupload'
+				// editor.customConfig.uploadFileName = 'file'
+				editor.customConfig.customUploadImg = function (files, insert) {
+				    // files 是 input 中选中的文件列表
+				    // insert 是获取图片 url 后，插入到编辑器的方法
+				
+				    // 上传代码返回结果之后，将图片插入到编辑器中
+					console.log(files)
+					let formdata = new FormData()
+					formdata.append("file",files[0])
+					$.ajax({
+						url:'http://localhost:3500/userupload',
+						type:"POST",
+						data:formdata,
+						contentType: false, 
+						processData: false, 
+						success:function(res){
+							insert(res.imgUrl)
+						}
+					})
+				    
+				}
+		        editor.create()
+		    </script>
+	</body>
+</html>
